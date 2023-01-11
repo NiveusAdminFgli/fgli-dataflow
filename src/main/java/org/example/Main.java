@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.List;
+import org.apache.beam.sdk.PipelineResult;
 
 
 
@@ -80,7 +81,16 @@ public class Main {
                 .withMethod(BigQueryIO.Write.Method.STORAGE_WRITE_API)
         );
 
-        p2.run().waitUntilFinish();
+//         p2.run().waitUntilFinish();
+        PipelineResult result = p2.run();
+        try {
+            result.getState();
+            result.waitUntilFinish();
+        } catch (UnsupportedOperationException e) {
+           // do nothing
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
